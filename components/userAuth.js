@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const config = require('config');
+const fs = require('fs');
 
 module.exports = function auth(roles) {
 
@@ -10,9 +10,8 @@ module.exports = function auth(roles) {
         if (!token) return res.status(401).send('Access denied. No token provided');
 
         try {
-            const decoded = jwt.sign({
-                id: _id.User
-            }, 'jubin');
+            const privateKey = fs.readFileSync('config/private.key');
+            const decoded = jwt.verify(token, privateKey);
 
             req.user = decoded;
             let iUSerInRole = false;

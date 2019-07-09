@@ -2,6 +2,10 @@ const userRepo = require('../../repositories/users/user.repository');
 const Joi = require('joi');
 const bcrypt = require('bcrypt');
 const svgCaptcha = require('svg-captcha');
+const jwt = require('jsonwebtoken');
+const securityContext = require('../../components/securityContext');
+const fs = require('fs');
+
 // const Recaptcha = require('express-recaptcha').RecaptchaV3;
 // const recaptcha = new Recaptcha('SITE_KEY', 'SECRET_KEY');
 
@@ -55,6 +59,7 @@ const register = async (data) => {
 };
 
 const login = async (data) => {
+
     const schema = Joi.object({
         userName: Joi.string().email().required().label('Username must be an email address.'),
         password: Joi.string().min(6).max(16).required().label('Password must at least 6 caracters')
@@ -67,6 +72,7 @@ const login = async (data) => {
         }
 
         const userCheck = await userRepo.findUserName(value.userName);
+       
         if (userCheck === null) {
             return Promise.reject('Invalid Username or Password.');
         }
@@ -75,7 +81,18 @@ const login = async (data) => {
         if (passCompare === false) {
             return Promise.reject('Invalid Username or Password.');
         } else {
-            return Promise.resolve('login successfull');
+
+            const privateKey = await fs.readFileSync('config/private.key');
+            
+            const token = jwt.sign({
+                _id: userCheck._id,
+                userName: userCheck.userName,
+                firstName: userCheck.firstName,
+                lastName: userCheck.lastName
+            }, privateKey, {
+                algorithm: 'HS512'
+            });
+            return Promise.resolve(token);
         }
 
     });

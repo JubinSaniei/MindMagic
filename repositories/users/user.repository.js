@@ -43,6 +43,8 @@ const findUserName = async (userName) => {
 
         const find = await request.findOne({
             userName: userName
+        },{
+            projection:{_id:1,userName:1,firstName:1,lastName:1,password:1}
         });
 
         return Promise.resolve(find);
