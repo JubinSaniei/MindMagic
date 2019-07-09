@@ -1,0 +1,85 @@
+<div class="header">
+  <div class="row">
+    <div class="col-sm-12">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark  ">
+        <a class="navbar-brand" [routerLink]="['']"><img class="img-fluid" style="width: 180px"
+            src="../../../assets/img/logo.png" alt="Logi"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" [routerLink]="['']">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">How to use</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Contact</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">About</a>
+            </li>
+            <li class="dropdown " id="drofConfig">
+              <a href="#" class="nav-link" data-toggle="dropdown"><i class="fas fa-user-cog pr-1"></i>User</a>
+              <!-- <a href="#" class="nav-link" data-toggle="dropdown" *ngIf="profileView ===">Profile</a> -->
+              <ul id="login-dp" class="dropdown-menu">
+                <li>
+                  <!-- LOGIN -->
+                  <div class="row" *ngIf="loginView===true">
+                    <div class="col-md-12">
+                      <form (ngSubmit)="onLogin(frmLogin)" #frmLogin="ngForm">
+                        <div class="form-group">
+                          <label class="sr-only" for="exampleInputEmail2">Email address</label>
+                          <input type="email" class="form-control" placeholder="Email address" name="userName"
+                            [(ngModel)]="model.userName" required>
+                        </div>
+                        <div class="form-group">
+                          <label class="sr-only" for="exampleInputPassword2">Password</label>
+                          <input type="password" class="form-control" placeholder="Password" name="password"
+                            [(ngModel)]="model.password" required>
+                          <div class="help-block text-right"><a class="text-muted" href="">Forget the password ?</a>
+                          </div>
+                        </div>
+                        <span class="text-danger help-block">{{errorMsg}}</span>
+                        <div class="form-group">
+                          <button type="submit" class="btn btn-sm btn-dark btn-block" (click)="errMsgReset()">Sign
+                            in</button>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="bottom text-center">
+                      New here ? <a class="text-muted" href="#"><b>Join Us</b></a>
+                    </div>
+                  </div>
+                  <!-- PROFILE VIEW -->
+                  <div class="row" *ngIf="profileView === true;">
+                    <div class="col-sm-12 loginName">
+
+                      <span><i class="fas fa-user-circle mr-3"></i>Welcome Back {{firstName}}</span>
+                    </div>
+                    <div class="col-sm-12 p-0 mt-4 link">
+                      <ul class="p-0 ">
+                        <li class=" pt-2 pb-3" [routerLink]="['/dashboard']">
+                          <a class="text-black">Dashboard</a>
+                        </li>
+                        <li class=" pt-2 pb-3" [routerLink]="['/']">
+                          <a class="text-black">Logout</a>
+                        </li>
+
+                      </ul>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+  </div>
+</div>

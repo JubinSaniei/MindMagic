@@ -1,1 +1,87 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+    background-color: #e4e3e3;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+  
+  .cursor {
+    cursor: pointer;
+  }
+  
+  .font-xs {
+    font-size: 12px;
+  }
+  
+  .font-sm {
+    font-size: 14px;
+  }
+  
+  .font-med {
+    font-size: 16px;
+  }
+  
+  .font-lg {
+    font-size: 18px;
+  }
+  
+  .font-xl {
+    font-size: 20px;
+  }
+  
+  .br1 {
+    border-style: solid;
+    border-color: red;
+  }
+  
+  .br2 {
+    border-style: solid;
+    border-color: green;
+  }
+  
+  .br3 {
+    border-style: solid;
+    border-color: blue;
+  }
+  
+  .br-grey {
+    border-style: solid;
+    border-color: #929292;
+  }
+  .bg-white {
+    background-color: #fff;
+  }
+  
+  .bg-nav {
+    background-color: #343a40;
+  }
+  
+  .bg-table {
+    background-color: #212529;
+  }
+  
+  .bg-green {
+    background-color: #1BC98E;
+  }
+  
+  .bg-grassgreen {
+    background-color: #3e9663;
+  }
+  
+  .bg-blue {
+    background-color: #1b98c9;
+  }
+  
+  .bg-orange {
+    background-color: #c9921b;
+  }
+  
+  .bg-red {
+    background-color: #c9211b;
+  }
+  
+  .bg-grey {
+    background-color: #929292;
+  }
+  
+  .bg-lighter {
+    background-color: #f3f2f2;
+  }
