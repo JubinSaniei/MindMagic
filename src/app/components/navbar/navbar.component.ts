@@ -32,14 +32,21 @@ export class NavbarComponent implements OnInit {
 
   model: any = { userName: '', password: '' };
   decodeModel: any = {};
+  activeToken: any = {};
   errorMsg: any = '';
   profileView = false;
   loginView = true;
-  firstName = 'Jubin';
+  firstName = '';
+
 
   ngOnInit() {
-    // this.decodeModel = TokenDecode.getDecodedAccessToken();
-    // console.log(this.decodeModel);
+    this.activeToken = sessionStorage.getItem('token');
+    // console.log(this.activeToken === this.decodeModel);
+    if (this.activeToken) {
+      this.profileView = true;
+      this.loginView = false;
+    }
+
   }
 
   onLogin(form: any): void {
@@ -48,12 +55,26 @@ export class NavbarComponent implements OnInit {
       return;
     }
     this.loginService.login(this.model).subscribe(data => {
+      window.sessionStorage.setItem('token', data);
+      this.decodeModel = TokenDecode.getDecodedAccessToken();
+
+      if (this.decodeModel.firstName === null) {
+        this.firstName = '';
+      }
+      this.firstName = this.decodeModel.firstName;
       this.router.navigate(['dashboard']);
       this.profileView = true;
       this.loginView = false;
     }, err => {
       this.errorMsg = err.error;
     });
+  }
+
+  onLogout() {
+    window.sessionStorage.removeItem('token');
+    this.router.navigate(['']);
+    this.profileView = false;
+    this.loginView = true;
   }
 
   errMsgReset() {

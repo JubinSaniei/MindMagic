@@ -6,12 +6,14 @@ import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginService } from './services/login.service';
 import { HomeComponent } from './components/home/home.component';
+import { CardService } from './services/card.service';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent },
@@ -34,11 +36,13 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes),
     HttpClientModule,
     NgbModule.forRoot(),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxDatatableModule
   ],
   providers: [
     NavbarComponent,
-    LoginService
+    LoginService,
+    CardService
   ],
   bootstrap: [AppComponent]
 })

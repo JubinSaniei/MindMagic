@@ -8,10 +8,19 @@ import { Router } from '@angular/router';
 })
 export class AppComponent implements OnInit {
   title = 'frontend';
+  home = (window.location.pathname === '/');
 
   constructor(private router: Router) { }
 
   ngOnInit() {
-
+    if (this.home) {
+      return;
+    } else {
+      const token = sessionStorage.getItem('token');
+      if (token === null) {
+        window.location.href = '/';
+        return;
+      }
+    }
   }
 }

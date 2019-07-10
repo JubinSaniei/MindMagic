@@ -59,15 +59,15 @@
                   <div class="row" *ngIf="profileView === true;">
                     <div class="col-sm-12 loginName">
 
-                      <span><i class="fas fa-user-circle mr-3"></i>Welcome Back {{firstName}}</span>
+                      <span class="userIcon"><i class="fas fa-user-circle mr-3"></i>Welcome Back {{firstName}}</span>
                     </div>
                     <div class="col-sm-12 p-0 mt-4 link">
                       <ul class="p-0 ">
                         <li class=" pt-2 pb-3" [routerLink]="['/dashboard']">
-                          <a class="text-black">Dashboard</a>
+                          <a class="text-black"><i class="fas fa-tachometer-alt pr-1"></i>Dashboard</a>
                         </li>
-                        <li class=" pt-2 pb-3" [routerLink]="['/']">
-                          <a class="text-black">Logout</a>
+                        <li class=" pt-2 pb-3" [routerLink]="['']" (click)="onLogout()" role="button ">
+                          <a class="text-black"><i class="fas fa-power-off pr-1"></i>Logout</a>
                         </li>
 
                       </ul>
