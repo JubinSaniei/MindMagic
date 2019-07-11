@@ -12,7 +12,17 @@ export class CardService {
     }
 
     getAllCards(id): Observable<any> {
-        console.log(id);
         return this.http.get(Settings.getSettings().apiUrl.concat(`user/cards/getallcards/${id}`), { headers: this.header });
     }
+    newCard(data): Observable<any> {
+// tslint:disable-next-line: max-line-length
+        return this.http.post(Settings.getSettings().apiUrl.concat(`user/cards/newcard`), data, { headers: this.header, responseType: 'text' });
+    }
+    deleteCard(data): Observable<any> {
+// tslint:disable-next-line: max-line-length
+        return this.http.post(Settings.getSettings().apiUrl.concat(`user/cards/deletecard`), data, { headers: this.header, responseType: 'text' });
+    }
+
+
+
 }

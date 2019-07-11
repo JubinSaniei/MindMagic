@@ -14,11 +14,14 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginService } from './services/login.service';
 import { HomeComponent } from './components/home/home.component';
 import { CardService } from './services/card.service';
+import { ConfirmButtonDirective } from './shared/confirmBtn.Directive';
+import { CardsComponent } from './components/cards/cards.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'home', component: HomeComponent },
   { path: 'dashboard', component: DashboardComponent },
+  { path: 'cards', component: CardsComponent },
   // { path: 'login', component: LoginComponent },
 ];
 
@@ -27,7 +30,9 @@ const appRoutes: Routes = [
     AppComponent,
     NavbarComponent,
     DashboardComponent,
-    HomeComponent
+    HomeComponent,
+    ConfirmButtonDirective,
+    CardsComponent
   ],
   imports: [
     BrowserModule,
@@ -42,7 +47,8 @@ const appRoutes: Routes = [
   providers: [
     NavbarComponent,
     LoginService,
-    CardService
+    CardService,
+    CardsComponent
   ],
   bootstrap: [AppComponent]
 })
