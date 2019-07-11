@@ -11,19 +11,91 @@ const getAllCards = async (UserId) => {
     });
     try {
         await client.connect();
+        const allCards = [];
+
+
         const request = client.db("MindMagic").collection("Users");
         // SHOW ALL CARDS BELONG TO THE USER
         const result = await request.findOne({
             _id: ObjectId(UserId)
         }, {
-            
+
             projection: {
                 _id: 1,
                 cards: 1
             }
         });
+        
+        for (let index = 0; index < result.cards.length; index++) {
+            const element = result.cards[index];
 
-        return Promise.resolve(result);
+            const obj = {
+                cardName: element.cardName,
+                allStagesCount: element.cardSet.length,
+                stage1Count: 0,
+                stage2Count: 0,
+                stage3Count: 0,
+                stage4Count: 0,
+                stage5Count: 0,
+                stage6Count: 0,
+                stage7Count: 0,
+                stageCompletedCount: 0,
+                stage1: [],
+                stage2: [],
+                stage3: [],
+                stage4: [],
+                stage5: [],
+                stage6: [],
+                stage7: [],
+                stageCompleted: []
+            };
+
+            // LOAD STAGE 1
+            obj.stage1 = element.cardSet.filter(function (i) {
+                return i.stage === 1;
+            });
+            obj.stage1Count = obj.stage1.length;
+
+            // LOAD STAGE 2
+            obj.stage2 = element.cardSet.filter(function (i) {
+                return i.stage === 2;
+            });
+            obj.stage2Count = obj.stage2.length;
+            // LOAD STAGE 3
+            obj.stage3 = element.cardSet.filter(function (i) {
+                return i.stage === 3;
+            });
+            obj.stage3Count = obj.stage3.length;
+            // LOAD STAGE 4
+            obj.stage4 = element.cardSet.filter(function (i) {
+                return i.stage === 4;
+            });
+            obj.stage4Count = obj.stage4.length;
+            // LOAD STAGE 5
+            obj.stage5 = element.cardSet.filter(function (i) {
+                return i.stage === 5;
+            });
+            obj.stage5Count = obj.stage5.length;
+            // LOAD STAGE 6
+            obj.stage6 = element.cardSet.filter(function (i) {
+                return i.stage === 6;
+            });
+            obj.stage6Count = obj.stage6.length;
+            // LOAD STAGE 7
+            obj.stage7 = element.cardSet.filter(function (i) {
+                return i.stage === 7;
+            });
+            obj.stage7Count = obj.stage7.length;
+            // LOAD STAGE COMPLETED
+            obj.stageCompleted = element.cardSet.filter(function (i) {
+                return i.stage === 8;
+            });
+            obj.stageCompletedCount = obj.stageCompleted.length;
+
+            allCards.push(obj);
+        }
+
+        return Promise.resolve(allCards);
 
 
     } catch (error) {
@@ -34,6 +106,7 @@ const getAllCards = async (UserId) => {
 };
 
 const newCard = async (userId, cardName) => {
+
     const client = new MongoClient(dbConfig, {
         useNewUrlParser: true
     });
@@ -56,6 +129,7 @@ const newCard = async (userId, cardName) => {
                 return Promise.reject(`${cardName} is already exist.`);
             }
         }
+
         // ADD NEW RECORD TO THE DATABASE
         const result = await request.updateOne({
             _id: ObjectId(userId)
@@ -63,14 +137,7 @@ const newCard = async (userId, cardName) => {
             $push: {
                 cards: {
                     cardName: cardName,
-                    stage1: [],
-                    stage2: [],
-                    stage3: [],
-                    stage4: [],
-                    stage5: [],
-                    stage6: [],
-                    stage7: [],
-                    completed: [],
+                    cardSet: [],
                     lastExamDate: null,
                     createdDate: new Date()
                 }
@@ -78,6 +145,30 @@ const newCard = async (userId, cardName) => {
         }, {
             upsert: true
         });
+
+        // const result = await request.updateOne({
+        //     _id: ObjectId(userId)
+        // }, {
+        //     $push: {
+        //         cards: {
+        //             cardName: cardName,
+        //             stage1: [],
+        //             stage2: [],
+        //             stage3: [],
+        //             stage4: [],
+        //             stage5: [],
+        //             stage6: [],
+        //             stage7: [],
+        //             completed: [],
+        //             lastExamDate: null,
+        //             createdDate: new Date()
+        //         }
+        //     }
+        // }, {
+        //     upsert: true
+        // });
+
+
         return Promise.resolve(`${cardName} is created`);
 
     } catch (error) {

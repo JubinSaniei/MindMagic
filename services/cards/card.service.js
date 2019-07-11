@@ -2,8 +2,11 @@ const cardRepo = require('../../repositories/cards/card.repository');
 const Joi = require('joi');
 const bcrypt = require('bcrypt');
 
-const getAllCards = async (data) => {
-    const result = await cardRepo.getAllCards(data);
+const getAllCards = async (userId) => {
+    const result = await cardRepo.getAllCards(userId);
+
+    // console.log(result);
+
     return Promise.resolve(result);
 };
 

@@ -10,15 +10,15 @@ const addToStage = async (data) => {
             _id: Joi.string().required(),
             cardName: Joi.string().required(),
             frontSide: Joi.string().required(),
-            backSide: Joi.string().required(),
-            stage: Joi.string().required()
+            backSide: Joi.string().required()
         });
         return Joi.validate(data, schema, async function (err, value) {
             if (err) {
                 return Promise.reject(err.message);
             }
-
-            const result = await stageRepo.addToStage(value._id, value.cardName, value.frontSide, value.backSide, value.stage);
+            let stage = 1;
+            const result = await stageRepo.addToStage(value._id, value.cardName, value.frontSide, value.backSide, stage);
+            
             if (result.modifiedCount === 0) {
                 return Promise.resolve(`Error: ${value.frontSide}, ${value.backSide} not created.`);
             }
@@ -34,16 +34,17 @@ const updateStCard = async (data) => {
             _id: Joi.string().required(),
             cardName: Joi.string().required(),
             card_id: Joi.string().required(),
-            stage: Joi.string().required(),
+            stage: Joi.number().required(),
             frontSide: Joi.string().required(),
-            backSide: Joi.string().required()
+            backSide: Joi.string().required(),
+            isCorrect: Joi.number().required()
         });
 
         return Joi.validate(data, schema, async (err, value) => {
             if (err) {
                 return Promise.reject(err.message);
             }
-            const result = await stageRepo.updateStCard(value._id, value.cardName, value.card_id, value.stage, value.frontSide, value.backSide);
+            const result = await stageRepo.updateStCard(value._id, value.cardName, value.card_id, value.stage, value.frontSide, value.backSide, value.isCorrect);
             return Promise.resolve(result);
         });
     } catch (error) {
@@ -121,5 +122,5 @@ module.exports = {
     updateStCard,
     deleteStCard,
     answer,
-    
+
 };
