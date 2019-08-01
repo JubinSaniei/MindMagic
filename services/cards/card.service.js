@@ -5,28 +5,33 @@ const bcrypt = require('bcrypt');
 const getAllCards = async (userId) => {
     const result = await cardRepo.getAllCards(userId);
 
+    return Promise.resolve(result);
+};
+const getAllCardSet = async (data) => {
+    const result = await cardRepo.getAllCardSet(data._id, data.cardName);
+
     // console.log(result);
 
     return Promise.resolve(result);
 };
 
-const newCard = async (data) => {
+const newDeck = async (data) => {
 
     const schema = Joi.object({
         _id: Joi.string().required(),
-        cardName: Joi.string().min(3).max(20).required()
+        cardName: Joi.string().min(3).max(20).required().error(new Error('Cannot be empty. At least 3 caracters are required.'))
     });
 
     return Joi.validate(data, schema, async (err, value) => {
         if (err) {
             return Promise.reject(err.message);
         }
-        const result = await cardRepo.newCard(value._id, value.cardName);
+        const result = await cardRepo.newDeck(value._id, value.cardName);
         return Promise.resolve(result);
     });
 
 };
-const delCard = async (data) => {
+const delDeck = async (data) => {
     const schema = Joi.object({
         _id: Joi.string().required(),
         cardName: Joi.string().min(3).max(20).required()
@@ -35,12 +40,12 @@ const delCard = async (data) => {
         if (err) {
             return Promise.reject(err.message);
         }
-        const result = await cardRepo.delCard(data._id, data.cardName);
+        const result = await cardRepo.delDeck(data._id, data.cardName);
         return Promise.resolve(result);
     });
 
 };
-const renameCard = async (data) => {
+const renameDeck = async (data) => {
     const schema = Joi.object({
         _id: Joi.string().required(),
         oldCardName: Joi.string().min(3).max(20).required(),
@@ -50,7 +55,7 @@ const renameCard = async (data) => {
         if (err) {
             return Promise.reject(err.message);
         }
-        const result = await cardRepo.renameCard(value._id, value.oldCardName, value.newCardName);
+        const result = await cardRepo.renameDeck(value._id, value.oldCardName, value.newCardName);
         return Promise.resolve(result);
     });
 
@@ -59,7 +64,8 @@ const renameCard = async (data) => {
 
 module.exports = {
     getAllCards,
-    newCard,
-    delCard,
-    renameCard
+    newDeck,
+    delDeck,
+    renameDeck,
+    getAllCardSet
 };

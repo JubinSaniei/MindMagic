@@ -22,12 +22,12 @@ const getAllCards = async (UserId) => {
 
             projection: {
                 _id: 1,
-                cards: 1
+                deck: 1
             }
         });
-        
-        for (let index = 0; index < result.cards.length; index++) {
-            const element = result.cards[index];
+
+        for (let index = 0; index < result.deck.length; index++) {
+            const element = result.deck[index];
 
             const obj = {
                 cardName: element.cardName,
@@ -105,7 +105,39 @@ const getAllCards = async (UserId) => {
     }
 };
 
-const newCard = async (userId, cardName) => {
+const getAllCardSet = async (userId, cardName) => {
+    const client = new MongoClient(dbConfig, {
+        useNewUrlParser: true
+    });
+    client.on('err', err => {
+        return Promise.reject(err);
+    });
+
+    try {
+        await client.connect();
+
+        const request = client.db("MindMagic").collection("Users");
+
+        const result = await request.findOne({
+            'deck.cardName': cardName,
+            _id: ObjectId(userId)
+        }, {
+            projection: {
+                deck: 1
+            }
+
+        });
+
+        return Promise.resolve(result);
+
+    } catch (error) {
+        return Promise.reject(error);
+    } finally {
+        client.close();
+    }
+};
+
+const newDeck = async (userId, cardName) => {
 
     const client = new MongoClient(dbConfig, {
         useNewUrlParser: true
@@ -121,10 +153,9 @@ const newCard = async (userId, cardName) => {
         const isCardExist = await request.findOne({
             _id: ObjectId(userId)
         });
-
         // CHECK IF CARD ALREADY EXISTS
-        for (let index = 0; index < isCardExist.cards.length; index++) {
-            const element = isCardExist.cards[index];
+        for (let index = 0; index < isCardExist.deck.length; index++) {
+            const element = isCardExist.deck[index];
             if (cardName === element.cardName) {
                 return Promise.reject(`${cardName} is already exist.`);
             }
@@ -135,7 +166,7 @@ const newCard = async (userId, cardName) => {
             _id: ObjectId(userId)
         }, {
             $push: {
-                cards: {
+                deck: {
                     cardName: cardName,
                     cardSet: [],
                     lastExamDate: null,
@@ -146,29 +177,6 @@ const newCard = async (userId, cardName) => {
             upsert: true
         });
 
-        // const result = await request.updateOne({
-        //     _id: ObjectId(userId)
-        // }, {
-        //     $push: {
-        //         cards: {
-        //             cardName: cardName,
-        //             stage1: [],
-        //             stage2: [],
-        //             stage3: [],
-        //             stage4: [],
-        //             stage5: [],
-        //             stage6: [],
-        //             stage7: [],
-        //             completed: [],
-        //             lastExamDate: null,
-        //             createdDate: new Date()
-        //         }
-        //     }
-        // }, {
-        //     upsert: true
-        // });
-
-
         return Promise.resolve(`${cardName} is created`);
 
     } catch (error) {
@@ -178,7 +186,7 @@ const newCard = async (userId, cardName) => {
     }
 };
 
-const delCard = async (userId, cardName) => {
+const delDeck = async (userId, cardName) => {
     const client = new MongoClient(dbConfig, {
         useNewUrlParser: true
     });
@@ -194,7 +202,7 @@ const delCard = async (userId, cardName) => {
             _id: ObjectId(userId)
         }, {
             $pull: {
-                cards: {
+                deck: {
                     cardName: cardName
                 }
             }
@@ -209,7 +217,7 @@ const delCard = async (userId, cardName) => {
     }
 };
 
-const renameCard = async (userId, oldCardName, newCardName) => {
+const renameDeck = async (userId, oldCardName, newCardName) => {
     const client = new MongoClient(dbConfig, {
         useNewUrlParser: true
     });
@@ -224,7 +232,7 @@ const renameCard = async (userId, oldCardName, newCardName) => {
             _id: ObjectId(userId)
         }, {
             $set: {
-                'cards.$[elem].cardName': newCardName
+                'deck.$[elem].cardName': newCardName
             }
         }, {
             arrayFilters: [{
@@ -242,7 +250,8 @@ const renameCard = async (userId, oldCardName, newCardName) => {
 
 module.exports = {
     getAllCards,
-    newCard,
-    delCard,
-    renameCard
+    newDeck,
+    delDeck,
+    renameDeck,
+    getAllCardSet
 };

@@ -73,7 +73,7 @@ const register = async (userName, password) => {
             password: password,
             firstName: null,
             lastName: null,
-            cards: []
+            deck: []
         };
         const result = await request.insertOne(schema);
         return Promise.resolve(`${userName} is created`);

@@ -12,27 +12,35 @@ app.get('/api/user/cards/getallcards/:id', (req, res) => {
         res.status(400).send(err);
     });
 });
-app.post('/api/user/cards/newcard/', (req, res) => {
-
-    cardService.newCard(req.body).then(body => {
+app.post('/api/user/cards/getAllCardSets/', (req, res) => {
+    cardService.getAllCardSet(req.body).then(body => {
         res.send(body);
 
     }).catch(err => {
         res.status(400).send(err);
     });
 });
-app.post('/api/user/cards/deletecard/', (req, res) => {
+app.post('/api/user/cards/newDeck/', (req, res) => {
 
-    cardService.delCard(req.body).then(body => {
+    cardService.newDeck(req.body).then(body => {
         res.send(body);
 
     }).catch(err => {
         res.status(400).send(err);
     });
 });
-app.post('/api/user/cards/renamecard/', (req, res) => {
+app.post('/api/user/cards/deleteDeck/', (req, res) => {
 
-    cardService.renameCard(req.body).then(body => {
+    cardService.delDeck(req.body).then(body => {
+        res.send(body);
+
+    }).catch(err => {
+        res.status(400).send(err);
+    });
+});
+app.post('/api/user/cards/renameDeck/', (req, res) => {
+
+    cardService.renameDeck(req.body).then(body => {
         res.send(body);
 
     }).catch(err => {

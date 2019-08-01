@@ -21,11 +21,12 @@ const addToStage = async (UserId, cardName, frontSide, backSide, stage) => {
 
             {
                 $push: {
-                    ['cards.$[element].cardSet']: {
+                    ['deck.$[element].cardSet']: {
                         card_id: uuid(),
                         frontSide: frontSide,
                         backSide: backSide,
-                        stage: stage
+                        stage: stage,
+                        createdDate: new Date().toLocaleDateString()
                     }
                 },
             }, {
@@ -34,24 +35,7 @@ const addToStage = async (UserId, cardName, frontSide, backSide, stage) => {
                 }]
             }
         );
-        // const result = await request.updateOne({
-        //         _id: ObjectId(UserId)
-        //     },
 
-        //     {
-        //         $push: {
-        //             ['cards.$[element].' + stage]: {
-        //                 card_id: uuid(),
-        //                 frontSide: frontSide,
-        //                 backSide: backSide
-        //             }
-        //         },
-        //     }, {
-        //         arrayFilters: [{
-        //             'element.cardName': cardName
-        //         }]
-        //     }
-        // );
         return Promise.resolve(result);
 
     } catch (error) {
@@ -60,7 +44,7 @@ const addToStage = async (UserId, cardName, frontSide, backSide, stage) => {
         client.close();
     }
 };
-const deleteStCard = async (UserId, cardName, frontSide, backSide, stage, card_id) => {
+const deleteStCard = async (UserId, cardName, card_id) => {
     const client = new MongoClient(dbConfig, {
         useNewUrlParser: true
     });
@@ -76,7 +60,7 @@ const deleteStCard = async (UserId, cardName, frontSide, backSide, stage, card_i
 
         }, {
             $pull: {
-                ['cards.$[element].cardSet']: {
+                ['deck.$[element].cardSet']: {
                     card_id: card_id
                 }
             }
@@ -85,7 +69,7 @@ const deleteStCard = async (UserId, cardName, frontSide, backSide, stage, card_i
                 'element.cardName': cardName
             }],
             projection: {
-                cards: 1
+                deck: 1
             }
         });
         if (result.modifiedCount === 0) {
@@ -100,7 +84,7 @@ const deleteStCard = async (UserId, cardName, frontSide, backSide, stage, card_i
     }
 };
 
-const updateStCard = async (UserId, cardName, card_id, stage, frontSide, backSide, isCorrect) => {
+const updateStCard = async (UserId, cardName, card_id, frontSide, backSide, stage) => {
     const client = new MongoClient(dbConfig, {
         useNewUrlParser: true
     });
@@ -110,17 +94,12 @@ const updateStCard = async (UserId, cardName, card_id, stage, frontSide, backSid
     try {
         await client.connect();
         const request = client.db("MindMagic").collection("Users");
-        if (isCorrect === 1) {
-            stage = stage + 1;
-        } else if (isCorrect === 2) {
-            stage = 1;
-        }
 
         const result = await request.updateOne({
             _id: ObjectId(UserId)
         }, {
             $set: {
-                ['cards.$[elem].cardSet.$[elem2]']: {
+                ['deck.$[elem].cardSet.$[elem2]']: {
                     card_id: card_id,
                     frontSide: frontSide,
                     backSide: backSide,
@@ -136,25 +115,7 @@ const updateStCard = async (UserId, cardName, card_id, stage, frontSide, backSid
                 }
             ]
         });
-        // const result = await request.findOneAndUpdate({
-        //     _id: ObjectId(UserId)
-        // }, {
-        //     $set: {
-        //         ['cards.$[elem].' + stage + '.$[elem2]']: {
-        //             card_id: card_id,
-        //             frontSide: frontSide,
-        //             backSide: backSide
-        //         }
-        //     }
-        // }, {
-        //     arrayFilters: [{
-        //             'elem.cardName': cardName,
-        //         },
-        //         {
-        //             'elem2.card_id': card_id
-        //         }
-        //     ],
-        // });
+
         if (result.modifiedCount === 0) {
 
             return Promise.resolve('nothing changed');

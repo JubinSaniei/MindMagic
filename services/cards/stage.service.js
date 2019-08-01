@@ -18,7 +18,7 @@ const addToStage = async (data) => {
             }
             let stage = 1;
             const result = await stageRepo.addToStage(value._id, value.cardName, value.frontSide, value.backSide, stage);
-            
+
             if (result.modifiedCount === 0) {
                 return Promise.resolve(`Error: ${value.frontSide}, ${value.backSide} not created.`);
             }
@@ -29,22 +29,34 @@ const addToStage = async (data) => {
     }
 };
 const updateStCard = async (data) => {
+
     try {
         const schema = Joi.object({
             _id: Joi.string().required(),
             cardName: Joi.string().required(),
             card_id: Joi.string().required(),
-            stage: Joi.number().required(),
             frontSide: Joi.string().required(),
             backSide: Joi.string().required(),
-            isCorrect: Joi.number().required()
+            stage: Joi.number().required(),
+            result: Joi.bool().required()
         });
 
         return Joi.validate(data, schema, async (err, value) => {
+            let newStage = null;
             if (err) {
                 return Promise.reject(err.message);
             }
-            const result = await stageRepo.updateStCard(value._id, value.cardName, value.card_id, value.stage, value.frontSide, value.backSide, value.isCorrect);
+            if (value.result === true) {
+                newStage = value.stage + 1;
+                if (newStage === 8) {
+                    
+                    newStage = 8;
+                }
+            } else if (value.result === false) {
+                newStage = 1;
+            }
+
+            const result = await stageRepo.updateStCard(value._id, value.cardName, value.card_id, value.frontSide, value.backSide, newStage);
             return Promise.resolve(result);
         });
     } catch (error) {
@@ -58,13 +70,13 @@ const deleteStCard = async (data) => {
             _id: Joi.string().required(),
             cardName: Joi.string().required(),
             card_id: Joi.string().required(),
-            stage: Joi.string().required(),
-            frontSide: Joi.string().required(),
-            backSide: Joi.string().required()
         });
 
         return Joi.validate(data, schema, async (err, value) => {
-            const result = await stageRepo.deleteStCard(value._id, value.cardName, value.frontSide, value.backSide, value.stage, value.card_id);
+            if (err) {
+                return Promise.reject(err);
+            }
+            const result = await stageRepo.deleteStCard(value._id, value.cardName, value.card_id);
             return Promise.resolve(result);
         });
 
@@ -73,54 +85,54 @@ const deleteStCard = async (data) => {
     }
 };
 
-const answer = async (data) => {
+// const answer = async (data) => {
+//     console.log('answer', data);
+//     try {
 
-    try {
+//         let newStage = 'stage' + (parseInt((data.stage).match(/\d+/)[0], 10) + 1);
+//         if (newStage === 'stage8') {
+//             newStage = 'completed';
+//         }
 
-        let newStage = 'stage' + (parseInt((data.stage).match(/\d+/)[0], 10) + 1);
-        if (newStage === 'stage8') {
-            newStage = 'completed';
-        }
+//         if (data.result === true) {
+//             const delOldLocation = await stageRepo.deleteStCard(data._id, data.cardName, data.frontSide, data.backSide, data.stage, data.card_id);
 
-        if (data.result === true) {
-            const delOldLocation = await stageRepo.deleteStCard(data._id, data.cardName, data.frontSide, data.backSide, data.stage, data.card_id);
+//             if (delOldLocation.modifiedCount === 0) {
+//                 return Promise.reject(`${data.frontSide} already moved to ${newStage}.`);
+//             } else {
+//                 const addToUpperStage = await stageRepo.addToStage(data._id, data.cardName, data.frontSide, data.backSide, newStage);
 
-            if (delOldLocation.modifiedCount === 0) {
-                return Promise.reject(`${data.frontSide} already moved to ${newStage}.`);
-            } else {
-                const addToUpperStage = await stageRepo.addToStage(data._id, data.cardName, data.frontSide, data.backSide, newStage);
+//             }
 
-            }
+//         } else if (data.result === false) {
+//             const stage1 = 'stage1';
 
-        } else if (data.result === false) {
-            const stage1 = 'stage1';
+//             const delOldLocation = await stageRepo.deleteStCard(data._id, data.cardName, data.frontSide, data.backSide, data.stage, data.card_id);
+//             if (delOldLocation.modifiedCount === 0) {
+//                 return Promise.reject(`${data.frontSide} already moved to ${stage1}.`);
+//             } else {
 
-            const delOldLocation = await stageRepo.deleteStCard(data._id, data.cardName, data.frontSide, data.backSide, data.stage, data.card_id);
-            if (delOldLocation.modifiedCount === 0) {
-                return Promise.reject(`${data.frontSide} already moved to ${stage1}.`);
-            } else {
+//                 const addToUpperStage = await stageRepo.addToStage(data._id, data.cardName, data.frontSide, data.backSide, stage1);
 
-                const addToUpperStage = await stageRepo.addToStage(data._id, data.cardName, data.frontSide, data.backSide, stage1);
+//             }
 
-            }
-
-        } else {
-            return Promise.reject('Error');
-        }
-
-
+//         } else {
+//             return Promise.reject('Error');
+//         }
 
 
-    } catch (error) {
-        return Promise.reject(error);
-    }
 
-};
+
+//     } catch (error) {
+//         return Promise.reject(error);
+//     }
+
+// };
 
 module.exports = {
     addToStage,
     updateStCard,
     deleteStCard,
-    answer,
+    // answer,
 
 };

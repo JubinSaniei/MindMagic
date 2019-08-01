@@ -3,7 +3,7 @@ const auth = require('../../components/userAuth');
 const stageService = require('../../services/cards/stage.service');
 
 
-app.post('/api/user/cards/stages/addNew', (req, res) => {
+app.post('/api/user/cards/addNew', (req, res) => {
 
     stageService.addToStage(req.body).then(body => {
         res.send(body);
