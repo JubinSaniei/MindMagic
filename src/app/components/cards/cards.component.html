@@ -1,3 +1,233 @@
-<p>
-  cards works!
-</p>
+<div class="container-fluid">
+  <div class="row mg-top">
+    <div class="col-sm-12 ">
+
+      <div class="card setHeight">
+        <div class="card-body">
+          <!-- Toast shows after delet happened -->
+          <div style="position: relative;">
+            <!-- Position it -->
+            <div style="position: absolute; top: 0; right: 0;">
+
+              <!-- Then put toasts within -->
+              <ngb-toast *ngIf="show" [autohide]="true" [delay]="5000" (hide)="close()">
+                <i class="fas fa-exclamation-circle"></i> Card <span
+                  class="text-danger font-weight-bolder">{{deletedCard}}</span> deleted
+              </ngb-toast>
+            </div>
+          </div>
+
+          <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+              <a class="nav-item nav-link active" id="nav-view-tab" data-toggle="tab" href="#nav-view" role="tab"
+                aria-controls="nav-view" aria-selected="true">View</a>
+              <a class="nav-item nav-link" id="nav-exercise-tab" data-toggle="tab" href="#nav-exercise" role="tab"
+                aria-controls="nav-exercise" aria-selected="false" (click)="getallCards()">Exercise</a>
+              <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab"
+                aria-controls="nav-contact" aria-selected="false">Contact</a>
+            </div>
+          </nav>
+          <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-view" role="tabpanel" aria-labelledby="nav-view-tab">
+              <!--  -->
+              <form (ngSubmit)="onNewCard(frmNewCard)" #frmNewCard="ngForm">
+                <div class="row pt-3 " id="textarea">
+
+                  <div class="col-sm-12 col-md-3">
+                    <!-- FrontSide Card -->
+                    <div class="mr-3 ">
+                      <div class="card bg-light mb-3">
+                        <div class="card-header">Front Side</div>
+                        <div class="card-body">
+                          <h5 class="card-title">Term</h5>
+                          <div class="card-text">
+                            <textarea class="form-control" rows="3" [(ngModel)]="newCardModel.frontSide"
+                              name="frontSide" #inputel></textarea>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Backside Card -->
+                  <div class="col-sm-12 col-md-3 ">
+                    <div class="">
+                      <div class="card bg-light mb-3">
+                        <div class="card-header">Back Side</div>
+                        <div class="card-body">
+                          <h5 class="card-title">Definition</h5>
+                          <div class="card-text">
+                            <textarea class="form-control" rows="3" [(ngModel)]="newCardModel.backSide"
+                              name="backSide"></textarea>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-sm-12">
+                    <div class="d-flex align-items-end">
+                      <button type="submit" class="btn btn-sm btn-success" style="width: 100px;">Create</button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <!-- Data Table -->
+              <div class="row ">
+                <div class="col-sm-12">
+                  <div class="table-respnsive">
+                    <table class="table table-condensed table-light table-borderless">
+                      <thead class="thead-light">
+                        <tr>
+                          <th style="width: 10px;">#</th>
+                          <th style="width: 650px;">Front Side</th>
+                          <th style="width: 650px;">Back Side</th>
+                          <th>Stage</th>
+                          <th style="width: 120px;">Created Date</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let item of selectedCard.cardSet; let ndx = index">
+                          <td>{{ndx+1}}</td>
+                          <td>{{item.frontSide}}</td>
+                          <td>{{item.backSide}}</td>
+                          <td>{{item.stage}}</td>
+                          <td>{{item.createdDate}}</td>
+                          <td class="d-flex justify-content-end">
+                            <span class="pr-4 cursor" data-toggle="modal" data-target="#update"
+                              (click)="onUpdateClicked(item)"><i class="far fa-edit"></i></span>
+                            <span class="text-danger cursor" appConfirmButton
+                              confirmText="Are you sure you want to delete {{item.frontSide}} - {{item.backSide}}?"
+                              (confirmed)="onDeleteCard($event, item)"><i
+                                class="far fa-trash-alt  text-danger"></i></span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <!--  -->
+            </div>
+            <!-- EXERCISE PAGE -->
+            <div class="tab-pane fade" id="nav-exercise" role="tabpanel" aria-labelledby="nav-exercise-tab">
+
+              <div class="row mt-3">
+                <div class="col-sm-12 mb-4">
+                  <h4 class="text-muted">Select which stage you want to start exam</h4>
+                </div>
+                <div class="col-sm-12 d-flex stgBtn">
+                  <div class="mr-3 cursor" (click)="onStageClicked('stage1')">
+                    <span class="ml-2">Stage 1</span><span class="badge badge-light font-med"
+                      id="bdg">{{stage1Count}}</span>
+                  </div>
+                  <div class="mr-3 cursor" (click)="onStageClicked('stage2')">
+                    <span class="ml-2">Stage 2</span><span class="badge badge-light font-med"
+                      id="bdg">{{stage2Count}}</span>
+                  </div>
+                  <div class="mr-3 cursor" (click)="onStageClicked('stage3')">
+                    <span class="ml-2">Stage 3</span><span class="badge badge-light font-med"
+                      id="bdg">{{stage3Count}}</span>
+                  </div>
+                  <div class="mr-3 cursor" (click)="onStageClicked('stage4')">
+                    <span class="ml-2">Stage 4</span><span class="badge badge-light font-med"
+                      id="bdg">{{stage4Count}}</span>
+                  </div>
+                  <div class="mr-3 cursor" (click)="onStageClicked('stage5')">
+                    <span class="ml-2">Stage 5</span><span class="badge badge-light font-med"
+                      id="bdg">{{stage5Count}}</span>
+                  </div>
+                  <div class="mr-3 cursor" (click)="onStageClicked('stage6')">
+                    <span class="ml-2">Stage 6</span><span class="badge badge-light font-med"
+                      id="bdg">{{stage6Count}}</span>
+                  </div>
+                  <div class="mr-3 cursor" (click)="onStageClicked('stage7')">
+                    <span class="ml-2">Stage 7</span><span class="badge badge-light font-med"
+                      id="bdg">{{stage7Count}}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-sm-12 col-md-4">
+                  <div class="card">
+                    <div class="card-header" style="height: 50px;">
+                      <h5 class="text-muted text-capitalize">{{selectedStage}}</h5>
+                    </div>
+
+                    <div class="card-body" style="height: 300px;">
+                      <div style="height: 150px;">
+                        <div class="ml-3">
+                          <h4 class="text-muted">Question</h4>
+                        </div>
+                        <div>
+                          {{examCard.frontSide}}
+                        </div>
+                      </div>
+
+                      <div>
+                        <div class="ml-3">
+                          <h4 class="text-muted">Answer</h4>
+                        </div>
+                        <div [hidden]="answerStatus">
+                          {{examCard.backSide}}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="card-footer footerBtn">
+                      <div class="d-flex justify-content-center">
+                        <span class="text-danger mrBtn" (click)="onResult('false')"><i class="far fa-thumbs-down"></i></span>
+                        <span class="text-secondary mrBtn" (click)="onShowAnswer()"><i class="far fa-eye"></i></span>
+                        <span class="text-success" (click)="onResult('true')"><i class="far fa-thumbs-up"></i></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+
+
+            </div>
+            <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Update Modal -->
+    <div class="modal fade" id="update" tabindex="-1" role="dialog" aria-labelledby="updateLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm" role="document">
+        <form (ngSubmit)="onUpdateCard(frmUpdate)" #frmUpdate="ngForm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="updateLabel">Update the card</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="col-sm-12 mb-2">
+                <input class="form-control form-control-sm" type="text" [(ngModel)]="UpdateClicked.frontSide"
+                  name="frontSide">
+              </div>
+              <div class="col-sm-12">
+                <input class="form-control form-control-sm" type="text" [(ngModel)]="UpdateClicked.backSide"
+                  name="backSide">
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal" #btnUpdateClose>Close</button>
+              <button type="submit" class="btn btn-sm btn-success">Update</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,7 +1,7 @@
 import { HostListener, EventEmitter, Input, Output } from '@angular/core';
 import { Directive } from '@angular/core';
 // import * as $ from 'jquery';
-declare var $: any;
+declare const $: any;
 
 @Directive({
     selector: '[appConfirmButton]'

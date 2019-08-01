@@ -44,12 +44,12 @@
               <td>{{item.stageCompletedCount}}</td>
               <td>dasdasd</td>
               <td>
-                <span class="cursor" [routerLink]="['/cards']">
+                <span class="cursor" (click)="onViewClick(item)">
                   <i class="far fa-eye  mr-3"></i>
                 </span>
 
                 <span class="cursor" appConfirmButton confirmText="Are you sure you want to delete {{item.cardName}}"
-                  (confirmed)="onDeleteCard($event, item.cardName)">
+                  (confirmed)="onDeleteDeck($event, item.cardName)">
                   <i class="far fa-trash-alt  text-danger"></i>
                 </span>
               </td>
@@ -64,7 +64,7 @@
   <!-- Modal -->
   <div class="modal fade" id="addNew" tabindex="-1" role="dialog" aria-labelledby="addNewLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm" role="document">
-      <form (ngSubmit)="onNewCardSave(frmNewCard)" #frmNewCard="ngForm">
+      <form (ngSubmit)="onNewDeckSave(frmNewCard)" #frmNewCard="ngForm">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="addNewLabel">Create New Card</h5>

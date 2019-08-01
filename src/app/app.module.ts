@@ -40,7 +40,7 @@ const appRoutes: Routes = [
     FormsModule,
     RouterModule.forRoot(appRoutes),
     HttpClientModule,
-    NgbModule.forRoot(),
+    NgbModule,
     ReactiveFormsModule,
     NgxDatatableModule
   ],

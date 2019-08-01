@@ -85,3 +85,9 @@ body {
   .bg-lighter {
     background-color: #f3f2f2;
   }
+  .mg-top {
+    margin-top: 50px;
+  }
+  .thText{
+  font-size: 15px;
+  }
